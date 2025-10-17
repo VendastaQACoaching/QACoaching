@@ -18,6 +18,143 @@
             background-color: #f5f5f5;
         }
 
+        /* ================================
+           PASSWORD SCREEN STYLES
+           ================================ */
+        #passwordScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .password-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .password-logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-7px);
+            }
+        }
+
+        .password-container h1 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .password-container p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .password-input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .password-input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .password-input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+            transform: scale(1.02);
+        }
+
+        .password-submit-btn {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .password-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .password-submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .password-error {
+            color: #dc3545;
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .password-error.show {
+            display: block;
+        }
+
+        /* Hide main content initially */
+        #mainContent {
+            display: none;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -78,7 +215,7 @@
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s ease;
-            background-color: white;
+            background-color: #fafafa;
         }
 
         .form-group input:focus,
@@ -87,6 +224,8 @@
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+            background-color: white;
+            transform: translateY(-1px);
         }
 
         /* Coaching Section Styling */
@@ -134,6 +273,11 @@
             background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
         }
 
+        .coaching-field.missed {
+            border-left-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        }
+
         .coaching-field.tips {
             border-left-color: #17a2b8;
             background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
@@ -148,7 +292,6 @@
         }
 
         .coaching-field textarea {
-            width: 100%;
             background: white;
             border: 2px solid #e9ecef;
             border-radius: 8px;
@@ -157,6 +300,33 @@
             line-height: 1.5;
             resize: vertical;
             min-height: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .coaching-field textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+            background: white;
+        }
+
+        .coaching-field.strengths textarea:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.2);
+        }
+
+        .coaching-field.opportunities textarea:focus {
+            border-color: #ffc107;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+        }
+
+        .coaching-field.missed textarea:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.2);
+        }
+
+        .coaching-field.tips textarea:focus {
+            border-color: #17a2b8;
+            box-shadow: 0 0 10px rgba(23, 162, 184, 0.2);
         }
 
         .radio-options {
@@ -321,10 +491,6 @@
             text-align: center;
             margin-top: 30px;
             padding: 20px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
         }
 
         .finish-audit-btn {
@@ -352,7 +518,7 @@
         }
 
         .download-report-btn {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
             color: white;
             padding: 15px 40px;
             border: none;
@@ -361,18 +527,41 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+            margin-left: 15px;
         }
 
         .download-report-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
         }
 
         .download-report-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .success-message h3 {
+            margin-bottom: 10px;
+        }
+
+        .success-message ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .success-message li {
+            margin: 5px 0;
         }
 
         .hidden {
@@ -396,19 +585,43 @@
             .attribute-options {
                 flex-direction: column;
             }
-
-            .form-actions {
-                flex-direction: column;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>QA Monitoring & Audit Tool</h1>
-            <p>Comprehensive evaluation system for specialist interactions</p>
-        </header>
+    <!-- PASSWORD SCREEN -->
+    <div id="passwordScreen">
+        <div class="password-container">
+            <div class="password-logo">🔐</div>
+            <h1>Welcome!</h1>
+            <p>QA Coaching Tool - Vendasta</p>
+            
+            <div class="password-input-group">
+                <input 
+                    type="password" 
+                    id="passwordInput" 
+                    placeholder="Enter Password"
+                    autocomplete="off"
+                />
+            </div>
+            
+            <button type="button" class="password-submit-btn" onclick="checkPassword()">
+                🚀 Access Tool
+            </button>
+            
+            <div class="password-error" id="passwordError">
+                ❌ Incorrect password. Please try again.
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden until password is correct) -->
+    <div id="mainContent">
+        <div class="container">
+            <header>
+                <h1>QA Monitoring & Audit Tool</h1>
+                <p>Comprehensive evaluation system for specialist interactions</p>
+            </header>
 
         <form id="auditForm">
             <!-- Basic Information Section -->
@@ -1130,9 +1343,10 @@
     </div>
 
     <script>
-        // QA Monitoring Tool JavaScript - COMPLETE WORKING VERSION
+        // QA Monitoring Tool JavaScript - Complete Version
         class QAMonitoringTool {
             constructor() {
+                console.log('🔧 QAMonitoringTool constructor called');
                 this.zeroToleranceFields = [
                     'understanding',
                     'politeTone', 
@@ -1181,19 +1395,22 @@
             }
             
             init() {
+                console.log('🎬 init() method called');
                 this.attachEventListeners();
                 this.calculateTotalScores();
                 this.addRadioButtonFallback();
+                console.log('✅ init() completed');
             }
             
             attachEventListeners() {
+                console.log('🔗 Attaching event listeners...');
                 // Add event listeners to all radio buttons
                 const radioButtons = document.querySelectorAll('input[type="radio"]');
-                console.log('Found radio buttons:', radioButtons.length);
+                console.log('📻 Found radio buttons:', radioButtons.length);
                 
                 radioButtons.forEach(radio => {
                     radio.addEventListener('change', (e) => {
-                        console.log('Radio changed:', radio.name, radio.value);
+                        console.log('🔘 Radio changed:', radio.name, '→', radio.value);
                         this.handleRadioChange(radio);
                         
                         // Handle interaction type changes
@@ -1201,8 +1418,13 @@
                             this.handleInteractionTypeChange(radio.value);
                         }
                         
-                        // Immediate recalculation
-                        this.calculateTotalScores();
+                        // Skip scoring calculation for non-scoring fields
+                        const nonScoringFields = ['auditPurpose', 'interactionType'];
+                        if (!nonScoringFields.includes(radio.name)) {
+                            console.log('💯 Triggering score recalculation...');
+                            // Immediate recalculation
+                            this.calculateTotalScores();
+                        }
                     });
                 });
                 
@@ -1249,6 +1471,7 @@
                 allOptionsInGroup.forEach(option => {
                     const radioOption = option.closest('.radio-option');
                     const attributeOption = option.closest('.attribute-option');
+                    
                     if (radioOption) radioOption.classList.remove('selected');
                     if (attributeOption) attributeOption.classList.remove('selected');
                 });
@@ -1257,6 +1480,7 @@
                 if (radio.checked) {
                     const radioOption = radio.closest('.radio-option');
                     const attributeOption = radio.closest('.attribute-option');
+                    
                     if (radioOption) radioOption.classList.add('selected');
                     if (attributeOption) attributeOption.classList.add('selected');
                 }
@@ -1279,17 +1503,22 @@
                 const recordingLinkGroup = document.getElementById('recordingLinkGroup');
                 
                 // Hide all dynamic fields first
-                ticketNumberGroup.classList.add('hidden');
-                recordingLinkGroup.classList.add('hidden');
+                ticketNumberGroup.style.display = 'none';
+                recordingLinkGroup.style.display = 'none';
                 
                 // Show appropriate field based on interaction type
                 switch (interactionType) {
                     case 'email':
                     case 'chat':
-                        ticketNumberGroup.classList.remove('hidden');
+                        ticketNumberGroup.style.display = 'block';
                         break;
                     case 'call':
-                        recordingLinkGroup.classList.remove('hidden');
+                        recordingLinkGroup.style.display = 'block';
+                        break;
+                    case 'other':
+                        // Show both fields for other types
+                        ticketNumberGroup.style.display = 'block';
+                        recordingLinkGroup.style.display = 'block';
                         break;
                 }
             }
@@ -1297,6 +1526,7 @@
             getFieldScore(fieldName) {
                 const selectedRadio = document.querySelector(`input[name="${fieldName}"]:checked`);
                 if (!selectedRadio) {
+                    console.log(`❌ No radio selected for ${fieldName}`);
                     return 0;
                 }
                 
@@ -1305,24 +1535,33 @@
                 
                 switch (selectedRadio.value) {
                     case 'yes':
-                        score = maxScore; // Full points for Yes
+                        score = maxScore; // Full points
+                        console.log(`✅ ${fieldName}: YES → ${score}/${maxScore} points`);
                         break;
                     case 'no':
-                        score = 0; // Zero points for No
+                        score = 0; // Zero points
+                        console.log(`❌ ${fieldName}: NO → ${score}/${maxScore} points (deducted)`);
                         break;
                     case 'na':
-                        score = maxScore; // Full points for N/A (gets full credit)
+                        score = maxScore; // Full points (N/A gets full credit)
+                        console.log(`⚪ ${fieldName}: N/A → ${score}/${maxScore} points (full credit)`);
                         break;
                     default:
                         score = 0;
+                        console.log(`⚠️ ${fieldName}: UNKNOWN VALUE '${selectedRadio.value}' → 0 points`);
                 }
                 
                 return score;
             }
             
             calculateTotalScores() {
+                console.log('=====================================================');
+                console.log('🔢 CALCULATING SCORES...');
+                console.log('=====================================================');
+                
                 // Check for zero tolerance violations first
                 const hasZeroToleranceViolation = this.checkZeroTolerance();
+                console.log('⚠️ Zero tolerance violation:', hasZeroToleranceViolation);
                 
                 // Customer Crucial scores
                 const customerFields = [
@@ -1351,22 +1590,55 @@
                     businessTotal = 0;
                     complianceTotal = 0;
                     grandTotal = 0;
+                    console.log('🚨 ZERO TOLERANCE VIOLATION - SETTING ALL SCORES TO 0');
                 } else {
                     // Normal scoring
+                    console.log('📊 CALCULATING SECTION SCORES:');
+                    console.log('--- Customer Crucial Attributes ---');
                     customerTotal = this.calculateSectionTotal(customerFields);
+                    console.log(`✅ Customer Total: ${customerTotal}/53`);
+                    
+                    console.log('--- Business Crucial Attributes ---');
                     businessTotal = this.calculateSectionTotal(businessFields);
+                    console.log(`✅ Business Total: ${businessTotal}/28`);
+                    
+                    console.log('--- Compliance Crucial Attributes ---');
                     complianceTotal = this.calculateSectionTotal(complianceFields);
+                    console.log(`✅ Compliance Total: ${complianceTotal}/19`);
+                    
                     grandTotal = customerTotal + businessTotal + complianceTotal;
+                    console.log(`🎯 GRAND TOTAL: ${grandTotal}/100`);
                 }
                 
-                // Update display
-                document.getElementById('customerTotal').textContent = customerTotal;
-                document.getElementById('businessTotal').textContent = businessTotal;
-                document.getElementById('complianceTotal').textContent = complianceTotal;
-                document.getElementById('totalScore').textContent = grandTotal;
+                // Update display with animation
+                const customerEl = document.getElementById('customerTotal');
+                const businessEl = document.getElementById('businessTotal');
+                const complianceEl = document.getElementById('complianceTotal');
+                const totalEl = document.getElementById('totalScore');
+                const percentageEl = document.getElementById('scorePercentage');
+                
+                // Add flash animation class
+                [customerEl, businessEl, complianceEl, totalEl, percentageEl].forEach(el => {
+                    el.style.transition = 'all 0.3s ease';
+                    el.style.transform = 'scale(1.1)';
+                    el.style.fontWeight = 'bold';
+                });
+                
+                setTimeout(() => {
+                    [customerEl, businessEl, complianceEl, totalEl, percentageEl].forEach(el => {
+                        el.style.transform = 'scale(1)';
+                    });
+                }, 300);
+                
+                customerEl.textContent = customerTotal;
+                businessEl.textContent = businessTotal;
+                complianceEl.textContent = complianceTotal;
+                totalEl.textContent = grandTotal;
                 
                 const percentage = Math.round((grandTotal / 100) * 100);
-                document.getElementById('scorePercentage').textContent = percentage + '%';
+                percentageEl.textContent = percentage + '%';
+                console.log(`📈 PERCENTAGE: ${percentage}%`);
+                console.log('=====================================================');
                 
                 // Update percentage color based on score
                 const percentageElement = document.getElementById('scorePercentage');
@@ -1430,10 +1702,7 @@
                 
                 requiredFields.forEach(fieldName => {
                     const field = document.querySelector(`[name="${fieldName}"]`);
-                    if (fieldName === 'auditPurpose' || fieldName === 'interactionType') {
-                        const checked = document.querySelector(`[name="${fieldName}"]:checked`);
-                        if (!checked) missingFields.push(fieldName);
-                    } else if (!field || !field.value.trim()) {
+                    if (!field || !field.value.trim()) {
                         missingFields.push(fieldName);
                     }
                 });
@@ -1595,6 +1864,7 @@
         .score-number { font-size: 36px; font-weight: bold; color: ${auditData.hasZeroToleranceViolation ? '#f44336' : auditData.percentage >= 90 ? '#4caf50' : auditData.percentage >= 80 ? '#ff9800' : '#f44336'}; }
         .section { margin: 25px 0; padding: 20px; border-radius: 8px; }
         .strengths { background-color: #e8f5e8; border-left: 4px solid #4caf50; }
+        .missed { background-color: #ffebee; border-left: 4px solid #f44336; }
         .opportunities { background-color: #fff3e0; border-left: 4px solid #ff9800; }
         .tips { background-color: #e3f2fd; border-left: 4px solid #2196f3; }
         .section h3 { margin-top: 0; color: #333; }
@@ -1682,8 +1952,8 @@
                 <h3>📝 Your Response Required</h3>
                 <p>Please review this audit and let us know your response:</p>
                 <div class="cta-buttons">
-                    <a href="https://dhanesh645.github.io/QACoaching/audit-response.html?id=${auditData.auditId}&action=accept&specialist=${encodeURIComponent(auditData.specialistName)}&auditor=${encodeURIComponent(auditData.auditorEmail)}" class="cta-button accept-btn">✅ Accept Audit</a>
-                    <a href="https://dhanesh645.github.io/QACoaching/audit-response.html?id=${auditData.auditId}&action=dispute&specialist=${encodeURIComponent(auditData.specialistName)}&auditor=${encodeURIComponent(auditData.auditorEmail)}" class="cta-button dispute-btn">⚠️ Dispute Audit</a>
+                    <a href="${window.location.origin}/audit-response.html?id=${auditData.auditId}&action=accept&specialist=${encodeURIComponent(auditData.specialistName)}&auditor=${encodeURIComponent(auditData.auditorEmail)}" class="cta-button accept-btn">✅ Accept Audit</a>
+                    <a href="${window.location.origin}/audit-response.html?id=${auditData.auditId}&action=dispute&specialist=${encodeURIComponent(auditData.specialistName)}&auditor=${encodeURIComponent(auditData.auditorEmail)}" class="cta-button dispute-btn">⚠️ Dispute Audit</a>
                 </div>
                 <p><small><strong>Audit ID:</strong> ${auditData.auditId}</small></p>
                 <p><small>If you accept, we'll record your acknowledgment. If you dispute, you'll be able to provide comments explaining your concerns.</small></p>
@@ -1815,9 +2085,80 @@ Recipients:
             }
         }
 
+        // Global variable to hold QA tool instance
+        let qaToolInstance = null;
+
         // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            new QAMonitoringTool();
+            // Check if already authenticated
+            if (sessionStorage.getItem('qaToolAuthenticated') === 'true') {
+                // Initialize immediately if already authenticated
+                qaToolInstance = new QAMonitoringTool();
+            }
+        });
+
+        // Function to initialize QA tool after password is entered
+        function initializeQATool() {
+            console.log('🚀 initializeQATool() called');
+            if (!qaToolInstance) {
+                console.log('✅ Creating new QAMonitoringTool instance...');
+                qaToolInstance = new QAMonitoringTool();
+                console.log('✅ QAMonitoringTool initialized successfully!');
+            } else {
+                console.log('⚠️ QAMonitoringTool already initialized');
+            }
+        }
+    </script>
+
+    </div> <!-- END mainContent -->
+
+    <!-- PASSWORD CHECKING SCRIPT -->
+    <script>
+        const CORRECT_PASSWORD = "QAcoaching@Vendasta";
+        
+        function checkPassword() {
+            const inputPassword = document.getElementById('passwordInput').value;
+            const errorDiv = document.getElementById('passwordError');
+            
+            if (inputPassword === CORRECT_PASSWORD) {
+                // Password is correct - hide password screen and show main content
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                
+                // Store in sessionStorage so user doesn't have to re-enter during session
+                sessionStorage.setItem('qaToolAuthenticated', 'true');
+                
+                // Initialize the QA tool now that content is visible
+                initializeQATool();
+            } else {
+                // Password is incorrect - show error
+                errorDiv.classList.add('show');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+                
+                // Hide error after 3 seconds
+                setTimeout(() => {
+                    errorDiv.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        // Allow Enter key to submit password
+        document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
+        
+        // Check if user is already authenticated in this session
+        window.addEventListener('DOMContentLoaded', function() {
+            if (sessionStorage.getItem('qaToolAuthenticated') === 'true') {
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            } else {
+                // Auto-focus on password input
+                document.getElementById('passwordInput').focus();
+            }
         });
     </script>
 </body>
