@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audit Response</title>
+    <title>QA Monitoring Tool</title>
     <style>
         * {
             margin: 0;
@@ -15,32 +15,184 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
+            background-color: #f5f5f5;
+        }
+
+        /* ================================
+           PASSWORD SCREEN STYLES
+           ================================ */
+        #passwordScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 20px;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .password-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .password-logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-7px);
+            }
+        }
+
+        .password-container h1 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .password-container p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .password-input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .password-input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .password-input-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+            transform: scale(1.02);
+        }
+
+        .password-submit-btn {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .password-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .password-submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .password-error {
+            color: #dc3545;
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .password-error.show {
+            display: block;
+        }
+
+        /* Hide main content initially */
+        #mainContent {
+            display: none;
         }
 
         .container {
-            max-width: 600px;
-            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
             background-color: white;
             border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.2);
-            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin-top: 20px;
         }
 
         header {
             text-align: center;
             margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
         }
 
         header h1 {
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 10px;
-            color: #667eea;
+        }
+
+        .form-section {
+            margin: 30px 0;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
         }
 
         .form-group {
@@ -55,83 +207,339 @@
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s ease;
+            background-color: #fafafa;
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+            background-color: white;
+            transform: translateY(-1px);
         }
 
-        .form-group textarea {
+        /* Coaching Section Styling */
+        .coaching-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .coaching-section h2 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: -25px -25px 25px -25px;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            font-size: 1.4em;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .coaching-field {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .coaching-field:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .coaching-field.strengths {
+            border-left-color: #28a745;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+
+        .coaching-field.opportunities {
+            border-left-color: #ffc107;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        }
+
+        .coaching-field.missed {
+            border-left-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        }
+
+        .coaching-field.tips {
+            border-left-color: #17a2b8;
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        }
+
+        .coaching-field label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 16px;
+        }
+
+        .coaching-field textarea {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 14px;
+            line-height: 1.5;
             resize: vertical;
-            min-height: 120px;
+            min-height: 100px;
+            transition: all 0.3s ease;
         }
 
-        .button-group {
+        .coaching-field textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+            background: white;
+        }
+
+        .coaching-field.strengths textarea:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.2);
+        }
+
+        .coaching-field.opportunities textarea:focus {
+            border-color: #ffc107;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+        }
+
+        .coaching-field.missed textarea:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.2);
+        }
+
+        .coaching-field.tips textarea:focus {
+            border-color: #17a2b8;
+            box-shadow: 0 0 10px rgba(23, 162, 184, 0.2);
+        }
+
+        .radio-options {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: white;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .radio-option:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        .radio-option.selected {
+            border-color: #667eea;
+            background-color: #e8f0ff;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 10px;
+            width: auto;
+        }
+
+        .radio-label {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        /* QA Attributes Styling */
+        .attribute-item {
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .attribute-item.zero-tolerance {
+            border-color: #ff6b6b;
+            background-color: #fff5f5;
+        }
+
+        .attribute-item.zero-tolerance.violation {
+            border-color: #e74c3c;
+            background-color: #ffebee;
+        }
+
+        .attribute-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .attribute-options {
             display: flex;
             gap: 15px;
-            margin-top: 30px;
+            flex-wrap: wrap;
         }
 
-        .btn {
-            flex: 1;
-            padding: 15px 30px;
+        .attribute-option {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .attribute-option:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        .attribute-option.selected {
+            border-color: #667eea;
+            background-color: #e8f0ff;
+        }
+
+        .attribute-option input[type="radio"] {
+            margin-right: 8px;
+            width: auto;
+        }
+
+        .attribute-option-label {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Score Display */
+        .score-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .score-display h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .score-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .score-item .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .score-item .value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .zero-tolerance-warning {
+            background-color: #ffebee;
+            border: 2px solid #f44336;
+            color: #d32f2f;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .zero-tolerance-warning h3 {
+            margin-bottom: 10px;
+            color: #d32f2f;
+        }
+
+        .form-actions {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .finish-audit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
             border: none;
             border-radius: 8px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-align: center;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
-        .btn-accept {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .btn-accept:hover {
-            background-color: #218838;
+        .finish-audit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-dispute {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-dispute:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-        }
-
-        .btn:disabled {
+        .finish-audit-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
 
-        .info-box {
-            background-color: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
+        .download-report-btn {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+            margin-left: 15px;
         }
 
-        .info-box p {
-            margin: 5px 0;
+        .download-report-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+        }
+
+        .download-report-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .success-message {
@@ -140,18 +548,20 @@
             color: #155724;
             padding: 20px;
             border-radius: 8px;
-            text-align: center;
-            display: none;
+            margin-top: 20px;
         }
 
-        .error-message {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            display: none;
+        .success-message h3 {
+            margin-bottom: 10px;
+        }
+
+        .success-message ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .success-message li {
+            margin: 5px 0;
         }
 
         .hidden {
@@ -159,155 +569,1597 @@
         }
 
         @media (max-width: 768px) {
-            .button-group {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .radio-options {
+                flex-direction: column;
+            }
+            
+            .radio-option {
+                min-width: auto;
+            }
+
+            .attribute-options {
                 flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📝 Audit Response</h1>
-            <p>Please review and respond to this audit</p>
-        </header>
-
-        <div id="responseForm">
-            <div class="info-box">
-                <p><strong>Audit ID:</strong> <span id="auditId"></span></p>
-                <p><strong>Action:</strong> <span id="actionType"></span></p>
-            </div>
-
-            <div class="form-group">
-                <label for="responderName">Your Name:</label>
+    <!-- PASSWORD SCREEN -->
+    <div id="passwordScreen">
+        <div class="password-container">
+            <div class="password-logo">🔐</div>
+            <h1>Welcome!</h1>
+            <p>QA Coaching Tool - Vendasta</p>
+            
+            <div class="password-input-group">
                 <input 
-                    type="text" 
-                    id="responderName" 
-                    name="responderName" 
-                    placeholder="Enter your full name" 
-                    required 
+                    type="password" 
+                    id="passwordInput" 
+                    placeholder="Enter Password"
+                    autocomplete="off"
                 />
             </div>
-
-            <div class="form-group">
-                <label for="responderEmail">Your Email:</label>
-                <input 
-                    type="email" 
-                    id="responderEmail" 
-                    name="responderEmail" 
-                    placeholder="Enter your email address"
-                    required 
-                />
+            
+            <button type="button" class="password-submit-btn" onclick="checkPassword()">
+                🚀 Access Tool
+            </button>
+            
+            <div class="password-error" id="passwordError">
+                ❌ Incorrect password. Please try again.
             </div>
-
-            <div class="form-group" id="commentsGroup">
-                <label for="comments">Comments (Required for Dispute):</label>
-                <textarea 
-                    id="comments" 
-                    name="comments" 
-                    placeholder="Please provide your comments or reasons for disputing..."
-                ></textarea>
-            </div>
-
-            <div class="button-group">
-                <button type="button" class="btn btn-accept" id="submitAccept">✅ Accept Audit</button>
-                <button type="button" class="btn btn-dispute" id="submitDispute">⚠️ Submit Dispute</button>
-            </div>
-        </div>
-
-        <div class="success-message" id="successMessage">
-            <h3>✅ Response Submitted Successfully!</h3>
-            <p>The auditor has been notified of your response.</p>
-        </div>
-
-        <div class="error-message" id="errorMessage">
-            <h3>❌ Error</h3>
-            <p id="errorText">Something went wrong. Please try again.</p>
         </div>
     </div>
 
+    <!-- MAIN CONTENT (Hidden until password is correct) -->
+    <div id="mainContent">
+        <div class="container">
+            <header>
+                <h1>QA Monitoring & Audit Tool</h1>
+                <p>Comprehensive evaluation system for specialist interactions</p>
+            </header>
+
+        <form id="auditForm">
+            <!-- Basic Information Section -->
+            <section class="form-section">
+                <h2>Audit Information</h2>
+                
+                <div class="form-group">
+                    <label>Purpose of the Audit:</label>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input 
+                                type="radio" 
+                                name="auditPurpose" 
+                                value="Regular QA check" 
+                                required
+                            />
+                            <span class="radio-label">Regular QA check</span>
+                        </label>
+                        <label class="radio-option">
+                            <input 
+                                type="radio" 
+                                name="auditPurpose" 
+                                value="Escalation Insight" 
+                            />
+                            <span class="radio-label">Escalation Insight</span>
+                        </label>
+                        <label class="radio-option">
+                            <input 
+                                type="radio" 
+                                name="auditPurpose" 
+                                value="Customer Survey Score Check" 
+                            />
+                            <span class="radio-label">Customer Survey Score Check</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="auditorName">Auditor Name:</label>
+                    <input 
+                        type="text" 
+                        id="auditorName" 
+                        name="auditorName" 
+                        placeholder="Enter your full name" 
+                        required 
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="auditorEmail">Auditor Email:</label>
+                    <input 
+                        type="email" 
+                        id="auditorEmail" 
+                        name="auditorEmail" 
+                        placeholder="Enter your email address"
+                        required 
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialistName">Specialist Name:</label>
+                    <input 
+                        type="text" 
+                        id="specialistName" 
+                        name="specialistName" 
+                        placeholder="Enter the specialist's full name" 
+                        required 
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="specialistEmail">Specialist Email:</label>
+                    <input 
+                        type="email" 
+                        id="specialistEmail" 
+                        name="specialistEmail" 
+                        required 
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="managerEmail">Manager Email:</label>
+                    <input 
+                        type="email" 
+                        id="managerEmail" 
+                        name="managerEmail" 
+                        required 
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="teamLeadEmail">Team Lead Email:</label>
+                    <input 
+                        type="email" 
+                        id="teamLeadEmail" 
+                        name="teamLeadEmail" 
+                        required 
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="interactionType">Interaction Type:</label>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input 
+                                type="radio" 
+                                name="interactionType" 
+                                value="email" 
+                                checked
+                            />
+                            <span class="radio-label">📧 Email Conversation</span>
+                        </label>
+                        <label class="radio-option">
+                            <input 
+                                type="radio" 
+                                name="interactionType" 
+                                value="chat" 
+                            />
+                            <span class="radio-label">💬 Chat Support</span>
+                        </label>
+                        <label class="radio-option">
+                            <input 
+                                type="radio" 
+                                name="interactionType" 
+                                value="call" 
+                            />
+                            <span class="radio-label">📞 Onboarding Call</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="ticketNumberGroup">
+                    <label for="ticketNumber">Ticket Number:</label>
+                    <input 
+                        type="text" 
+                        id="ticketNumber" 
+                        name="ticketNumber" 
+                        placeholder="Enter the ticket number" 
+                    />
+                </div>
+                
+                <div class="form-group hidden" id="recordingLinkGroup">
+                    <label for="recordingLink">Meeting Recording Link:</label>
+                    <input 
+                        type="url" 
+                        id="recordingLink" 
+                        name="recordingLink" 
+                        placeholder="Enter the meeting recording URL" 
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="interactionContent">Email Conversation / Transcript:</label>
+                    <textarea 
+                        id="interactionContent" 
+                        name="interactionContent" 
+                        rows="8" 
+                        placeholder="Paste the email conversation or call transcript here..." 
+                        required 
+                    ></textarea>
+                </div>
+            </section>
+
+            <!-- Customer Crucial Attributes -->
+            <section class="form-section">
+                <h2>Customer Crucial Attributes (53 points)</h2>
+                
+                <div class="attribute-item zero-tolerance" data-field="understanding">
+                    <div class="attribute-name">Clear understanding of request/issue (7 points) - ZERO TOLERANCE</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="understanding" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="understanding" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="understanding" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="confirmation">
+                    <div class="attribute-name">Confirmed required information (4 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="confirmation" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="confirmation" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="confirmation" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="tone">
+                    <div class="attribute-name">Professional and empathetic tone (5 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="tone" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="tone" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="tone" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="nextSteps">
+                    <div class="attribute-name">Clear next steps outlined (4 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="nextSteps" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="nextSteps" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="nextSteps" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="keyPoints">
+                    <div class="attribute-name">Key discussion points accurate (2 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="keyPoints" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="keyPoints" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="keyPoints" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="bodyLanguage">
+                    <div class="attribute-name">Professional body language (2 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="bodyLanguage" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="bodyLanguage" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="bodyLanguage" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="noJargon">
+                    <div class="attribute-name">No confusing jargon used (3 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="noJargon" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="noJargon" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="noJargon" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="resources">
+                    <div class="attribute-name">Helpful resources provided (2 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="resources" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="resources" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="resources" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="partnerUnderstanding">
+                    <div class="attribute-name">Partner understood agent (4 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="partnerUnderstanding" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="partnerUnderstanding" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="partnerUnderstanding" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="deadAir">
+                    <div class="attribute-name">No unexplained dead air (3 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="deadAir" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="deadAir" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="deadAir" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="callLength">
+                    <div class="attribute-name">Call not unnecessarily prolonged (4 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="callLength" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="callLength" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="callLength" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item zero-tolerance" data-field="politeTone">
+                    <div class="attribute-name">Polite tone, no profanity (7 points) - ZERO TOLERANCE</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="politeTone" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="politeTone" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="politeTone" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="emailQuality">
+                    <div class="attribute-name">Professional email writing (3 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="emailQuality" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="emailQuality" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="emailQuality" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="expectations">
+                    <div class="attribute-name">Clear expectations set (3 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="expectations" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="expectations" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="expectations" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Business Crucial Attributes -->
+            <section class="form-section">
+                <h2>Business Crucial Attributes (28 points)</h2>
+                
+                <div class="attribute-item" data-field="workflow">
+                    <div class="attribute-name">Workflow correctly followed (4 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="workflow" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="workflow" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="workflow" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item zero-tolerance" data-field="taskManager">
+                    <div class="attribute-name">Task Manager updated appropriately (5 points) - ZERO TOLERANCE</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="taskManager" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="taskManager" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="taskManager" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="communicationMode">
+                    <div class="attribute-name">Communication mode updated (3 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="communicationMode" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="communicationMode" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="communicationMode" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="bounceBack">
+                    <div class="attribute-name">Bounce back procedure followed (4 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="bounceBack" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="bounceBack" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="bounceBack" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item zero-tolerance" data-field="revenueLoss">
+                    <div class="attribute-name">No revenue loss from incorrect info (4 points) - ZERO TOLERANCE</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="revenueLoss" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="revenueLoss" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="revenueLoss" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="slaTimeframe">
+                    <div class="attribute-name">Responded within SLA timeframe (4 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="slaTimeframe" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="slaTimeframe" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="slaTimeframe" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item zero-tolerance" data-field="callRecording">
+                    <div class="attribute-name">Call recorded appropriately (4 points) - ZERO TOLERANCE</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="callRecording" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="callRecording" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="callRecording" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Compliance Crucial Attributes -->
+            <section class="form-section">
+                <h2>Compliance Crucial Attributes (19 points)</h2>
+                
+                <div class="attribute-item" data-field="commentVisibility">
+                    <div class="attribute-name">Comment visibility updated (3 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="commentVisibility" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="commentVisibility" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="commentVisibility" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item zero-tolerance" data-field="whiteLabelling">
+                    <div class="attribute-name">White-labelling maintained (5 points) - ZERO TOLERANCE</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="whiteLabelling" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="whiteLabelling" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="whiteLabelling" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="documentUpload">
+                    <div class="attribute-name">Documents uploaded correctly (3 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="documentUpload" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="documentUpload" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="documentUpload" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item" data-field="ticketClosure">
+                    <div class="attribute-name">Tickets closed timely (3 points)</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="ticketClosure" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="ticketClosure" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="ticketClosure" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="attribute-item zero-tolerance" data-field="partnerConsent">
+                    <div class="attribute-name">No client contact without consent (5 points) - ZERO TOLERANCE</div>
+                    <div class="attribute-options">
+                        <label class="attribute-option">
+                            <input type="radio" name="partnerConsent" value="yes" />
+                            <span class="attribute-option-label">Yes</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="partnerConsent" value="no" />
+                            <span class="attribute-option-label">No</span>
+                        </label>
+                        <label class="attribute-option">
+                            <input type="radio" name="partnerConsent" value="na" />
+                            <span class="attribute-option-label">N/A</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Score Display -->
+            <section class="form-section">
+                <h2>Score Summary</h2>
+                <div class="score-display">
+                    <h3>Current Scores</h3>
+                    <div class="score-breakdown">
+                        <div class="score-item">
+                            <div class="label">Customer Crucial</div>
+                            <div class="value" id="customerTotal">0</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="label">Business Crucial</div>
+                            <div class="value" id="businessTotal">0</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="label">Compliance Crucial</div>
+                            <div class="value" id="complianceTotal">0</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="label">Total Score</div>
+                            <div class="value" id="totalScore">0</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="label">Percentage</div>
+                            <div class="value" id="scorePercentage">0%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="zero-tolerance-warning" id="zeroToleranceWarning">
+                    <h3>⚠️ ZERO TOLERANCE VIOLATION - AUTOMATIC FAILURE!</h3>
+                    <p>One or more zero-tolerance attributes have been marked as "No". This results in an <strong>automatic 0% score</strong> regardless of all other attributes.</p>
+                    <p><em>Zero tolerance attributes must be perfect to pass the audit.</em></p>
+                </div>
+            </section>
+
+            <!-- Coaching & Feedback Section -->
+            <section class="coaching-section">
+                <h2>🎯 Coaching & Feedback</h2>
+                <div class="coaching-field strengths">
+                    <label for="positives">✅ Strengths & Positives:</label>
+                    <textarea 
+                        id="positives" 
+                        name="positives" 
+                        rows="4" 
+                        placeholder="Highlight the specialist's strengths and what they did well..." 
+                    ></textarea>
+                </div>
+                <div class="coaching-field opportunities">
+                    <label for="opportunities">🎯 Areas for Improvement:</label>
+                    <textarea 
+                        id="opportunities" 
+                        name="opportunities" 
+                        rows="4" 
+                        placeholder="Identify specific areas where the specialist can improve and grow..." 
+                    ></textarea>
+                </div>
+                <div class="coaching-field tips">
+                    <label for="tips">💡 Coaching Tips & Recommendations:</label>
+                    <textarea 
+                        id="tips" 
+                        name="tips" 
+                        rows="4" 
+                        placeholder="Provide specific coaching tips and actionable recommendations for improvement..." 
+                    ></textarea>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="button" class="finish-audit-btn" id="finishAudit">
+                    Finish Audit & Send Results
+                </button>
+                <button type="button" class="download-report-btn" id="downloadReport">
+                    Download Report
+                </button>
+            </div>
+        </form>
+    </div>
+
     <script>
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const auditId = urlParams.get('id');
-        const action = urlParams.get('action');
-
-        // Display audit info
-        document.getElementById('auditId').textContent = auditId || 'Unknown';
-        document.getElementById('actionType').textContent = action === 'accept' ? 'Accept Audit' : 'Dispute Audit';
-
-        // Handle accept button
-        document.getElementById('submitAccept').addEventListener('click', async () => {
-            await submitResponse('accept_audit');
-        });
-
-        // Handle dispute button
-        document.getElementById('submitDispute').addEventListener('click', async () => {
-            const comments = document.getElementById('comments').value.trim();
-            if (!comments) {
-                alert('Please provide comments explaining why you are disputing this audit.');
-                return;
+        // QA Monitoring Tool JavaScript - Complete Version
+        class QAMonitoringTool {
+            constructor() {
+                console.log('🔧 QAMonitoringTool constructor called');
+                this.zeroToleranceFields = [
+                    'understanding',
+                    'politeTone', 
+                    'taskManager',
+                    'revenueLoss',
+                    'callRecording',
+                    'whiteLabelling',
+                    'partnerConsent'
+                ];
+                
+                this.maxScores = {
+                    // Customer Crucial (53 points)
+                    understanding: 7,
+                    confirmation: 4,
+                    tone: 5,
+                    nextSteps: 4,
+                    keyPoints: 2,
+                    bodyLanguage: 2,
+                    noJargon: 3,
+                    resources: 2,
+                    partnerUnderstanding: 4,
+                    deadAir: 3,
+                    callLength: 4,
+                    politeTone: 7,
+                    emailQuality: 3,
+                    expectations: 3,
+                    
+                    // Business Crucial (28 points)
+                    workflow: 4,
+                    taskManager: 5,
+                    communicationMode: 3,
+                    bounceBack: 4,
+                    revenueLoss: 4,
+                    slaTimeframe: 4,
+                    callRecording: 4,
+                    
+                    // Compliance Crucial (19 points)
+                    commentVisibility: 3,
+                    whiteLabelling: 5,
+                    documentUpload: 3,
+                    ticketClosure: 3,
+                    partnerConsent: 5
+                };
+                
+                this.init();
             }
-            await submitResponse('dispute_audit');
-        });
-
-        async function submitResponse(actionType) {
-            const responderName = document.getElementById('responderName').value.trim();
-            const responderEmail = document.getElementById('responderEmail').value.trim();
-            const comments = document.getElementById('comments').value.trim();
-
-            if (!responderName || !responderEmail) {
-                alert('Please fill in your name and email.');
-                return;
+            
+            init() {
+                console.log('🎬 init() method called');
+                this.attachEventListeners();
+                this.calculateTotalScores();
+                this.addRadioButtonFallback();
+                console.log('✅ init() completed');
             }
-
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(responderEmail)) {
-                alert('Please enter a valid email address.');
-                return;
-            }
-
-            // Disable buttons
-            document.getElementById('submitAccept').disabled = true;
-            document.getElementById('submitDispute').disabled = true;
-            document.getElementById('submitAccept').textContent = 'Submitting...';
-            document.getElementById('submitDispute').textContent = 'Submitting...';
-
-            try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbz6-Iv5FbHYVR5EdkIAukyWV6FYVLFzt8DWfax0_9lBGxdd32MpraHNk2FdaI8MYjVW/exec', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: actionType,
-                        auditId: auditId,
-                        responderName: responderName,
-                        responderEmail: responderEmail,
-                        comments: comments,
-                        specialistName: urlParams.get('specialist') || responderName,
-                        auditorEmail: urlParams.get('auditor') || ''
-                    })
+            
+            attachEventListeners() {
+                console.log('🔗 Attaching event listeners...');
+                // Add event listeners to all radio buttons
+                const radioButtons = document.querySelectorAll('input[type="radio"]');
+                console.log('📻 Found radio buttons:', radioButtons.length);
+                
+                radioButtons.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        console.log('🔘 Radio changed:', radio.name, '→', radio.value);
+                        this.handleRadioChange(radio);
+                        
+                        // Handle interaction type changes
+                        if (radio.name === 'interactionType') {
+                            this.handleInteractionTypeChange(radio.value);
+                        }
+                        
+                        // Skip scoring calculation for non-scoring fields
+                        const nonScoringFields = ['auditPurpose', 'interactionType'];
+                        if (!nonScoringFields.includes(radio.name)) {
+                            console.log('💯 Triggering score recalculation...');
+                            // Immediate recalculation
+                            this.calculateTotalScores();
+                        }
+                    });
                 });
+                
+                // Initialize interaction type fields
+                this.handleInteractionTypeChange('email'); // Default to email
+                
+                // Finish audit button
+                const finishButton = document.getElementById('finishAudit');
+                finishButton.addEventListener('click', () => {
+                    this.finishAudit();
+                });
+                
+                // Download report button
+                const downloadButton = document.getElementById('downloadReport');
+                downloadButton.addEventListener('click', () => {
+                    this.downloadReport();
+                });
+                
+                // Form validation
+                const form = document.getElementById('auditForm');
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.finishAudit();
+                });
+            }
+            
+            // Fallback for browsers that don't support :has() selector
+            addRadioButtonFallback() {
+                const radioButtons = document.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => {
+                    if (radio.checked) {
+                        const radioOption = radio.closest('.radio-option');
+                        if (radioOption) {
+                            radioOption.classList.add('selected');
+                        }
+                    }
+                });
+            }
+            
+            handleRadioChange(radio) {
+                // Remove selected class from all options in this group
+                const fieldName = radio.name;
+                const allOptionsInGroup = document.querySelectorAll(`input[name="${fieldName}"]`);
+                allOptionsInGroup.forEach(option => {
+                    const radioOption = option.closest('.radio-option');
+                    const attributeOption = option.closest('.attribute-option');
+                    
+                    if (radioOption) radioOption.classList.remove('selected');
+                    if (attributeOption) attributeOption.classList.remove('selected');
+                });
+                
+                // Add selected class to the chosen option
+                if (radio.checked) {
+                    const radioOption = radio.closest('.radio-option');
+                    const attributeOption = radio.closest('.attribute-option');
+                    
+                    if (radioOption) radioOption.classList.add('selected');
+                    if (attributeOption) attributeOption.classList.add('selected');
+                }
+                
+                // Handle zero tolerance visual feedback
+                if (this.zeroToleranceFields.includes(fieldName)) {
+                    const attributeItem = radio.closest('.attribute-item');
+                    if (attributeItem) {
+                        if (radio.value === 'no') {
+                            attributeItem.classList.add('violation');
+                        } else {
+                            attributeItem.classList.remove('violation');
+                        }
+                    }
+                }
+            }
+            
+            handleInteractionTypeChange(interactionType) {
+                const ticketNumberGroup = document.getElementById('ticketNumberGroup');
+                const recordingLinkGroup = document.getElementById('recordingLinkGroup');
+                
+                // Hide all dynamic fields first
+                ticketNumberGroup.style.display = 'none';
+                recordingLinkGroup.style.display = 'none';
+                
+                // Show appropriate field based on interaction type
+                switch (interactionType) {
+                    case 'email':
+                    case 'chat':
+                        ticketNumberGroup.style.display = 'block';
+                        break;
+                    case 'call':
+                        recordingLinkGroup.style.display = 'block';
+                        break;
+                    case 'other':
+                        // Show both fields for other types
+                        ticketNumberGroup.style.display = 'block';
+                        recordingLinkGroup.style.display = 'block';
+                        break;
+                }
+            }
+            
+            getFieldScore(fieldName) {
+                const selectedRadio = document.querySelector(`input[name="${fieldName}"]:checked`);
+                if (!selectedRadio) {
+                    console.log(`❌ No radio selected for ${fieldName}`);
+                    return 0;
+                }
+                
+                const maxScore = this.maxScores[fieldName] || 0;
+                let score = 0;
+                
+                switch (selectedRadio.value) {
+                    case 'yes':
+                        score = maxScore; // Full points
+                        console.log(`✅ ${fieldName}: YES → ${score}/${maxScore} points`);
+                        break;
+                    case 'no':
+                        score = 0; // Zero points
+                        console.log(`❌ ${fieldName}: NO → ${score}/${maxScore} points (deducted)`);
+                        break;
+                    case 'na':
+                        score = maxScore; // Full points (N/A gets full credit)
+                        console.log(`⚪ ${fieldName}: N/A → ${score}/${maxScore} points (full credit)`);
+                        break;
+                    default:
+                        score = 0;
+                        console.log(`⚠️ ${fieldName}: UNKNOWN VALUE '${selectedRadio.value}' → 0 points`);
+                }
+                
+                return score;
+            }
+            
+            calculateTotalScores() {
+                console.log('=====================================================');
+                console.log('🔢 CALCULATING SCORES...');
+                console.log('=====================================================');
+                
+                // Check for zero tolerance violations first
+                const hasZeroToleranceViolation = this.checkZeroTolerance();
+                console.log('⚠️ Zero tolerance violation:', hasZeroToleranceViolation);
+                
+                // Customer Crucial scores
+                const customerFields = [
+                    'understanding', 'confirmation', 'tone', 'nextSteps', 'keyPoints',
+                    'bodyLanguage', 'noJargon', 'resources', 'partnerUnderstanding',
+                    'deadAir', 'callLength', 'politeTone', 'emailQuality', 'expectations'
+                ];
+                
+                // Business Crucial scores
+                const businessFields = [
+                    'workflow', 'taskManager', 'communicationMode', 'bounceBack',
+                    'revenueLoss', 'slaTimeframe', 'callRecording'
+                ];
+                
+                // Compliance Crucial scores
+                const complianceFields = [
+                    'commentVisibility', 'whiteLabelling', 'documentUpload',
+                    'ticketClosure', 'partnerConsent'
+                ];
+                
+                let customerTotal, businessTotal, complianceTotal, grandTotal;
+                
+                if (hasZeroToleranceViolation) {
+                    // Zero tolerance violation = automatic 0% score
+                    customerTotal = 0;
+                    businessTotal = 0;
+                    complianceTotal = 0;
+                    grandTotal = 0;
+                    console.log('🚨 ZERO TOLERANCE VIOLATION - SETTING ALL SCORES TO 0');
+                } else {
+                    // Normal scoring
+                    console.log('📊 CALCULATING SECTION SCORES:');
+                    console.log('--- Customer Crucial Attributes ---');
+                    customerTotal = this.calculateSectionTotal(customerFields);
+                    console.log(`✅ Customer Total: ${customerTotal}/53`);
+                    
+                    console.log('--- Business Crucial Attributes ---');
+                    businessTotal = this.calculateSectionTotal(businessFields);
+                    console.log(`✅ Business Total: ${businessTotal}/28`);
+                    
+                    console.log('--- Compliance Crucial Attributes ---');
+                    complianceTotal = this.calculateSectionTotal(complianceFields);
+                    console.log(`✅ Compliance Total: ${complianceTotal}/19`);
+                    
+                    grandTotal = customerTotal + businessTotal + complianceTotal;
+                    console.log(`🎯 GRAND TOTAL: ${grandTotal}/100`);
+                }
+                
+                // Update display with animation
+                const customerEl = document.getElementById('customerTotal');
+                const businessEl = document.getElementById('businessTotal');
+                const complianceEl = document.getElementById('complianceTotal');
+                const totalEl = document.getElementById('totalScore');
+                const percentageEl = document.getElementById('scorePercentage');
+                
+                // Add flash animation class
+                [customerEl, businessEl, complianceEl, totalEl, percentageEl].forEach(el => {
+                    el.style.transition = 'all 0.3s ease';
+                    el.style.transform = 'scale(1.1)';
+                    el.style.fontWeight = 'bold';
+                });
+                
+                setTimeout(() => {
+                    [customerEl, businessEl, complianceEl, totalEl, percentageEl].forEach(el => {
+                        el.style.transform = 'scale(1)';
+                    });
+                }, 300);
+                
+                customerEl.textContent = customerTotal;
+                businessEl.textContent = businessTotal;
+                complianceEl.textContent = complianceTotal;
+                totalEl.textContent = grandTotal;
+                
+                const percentage = Math.round((grandTotal / 100) * 100);
+                percentageEl.textContent = percentage + '%';
+                console.log(`📈 PERCENTAGE: ${percentage}%`);
+                console.log('=====================================================');
+                
+                // Update percentage color based on score
+                const percentageElement = document.getElementById('scorePercentage');
+                if (hasZeroToleranceViolation || percentage === 0) {
+                    percentageElement.style.color = '#e74c3c';
+                    percentageElement.style.fontWeight = 'bold';
+                } else if (percentage >= 90) {
+                    percentageElement.style.color = '#00b894';
+                    percentageElement.style.fontWeight = 'normal';
+                } else if (percentage >= 80) {
+                    percentageElement.style.color = '#fdcb6e';
+                    percentageElement.style.fontWeight = 'normal';
+                } else {
+                    percentageElement.style.color = '#e17055';
+                    percentageElement.style.fontWeight = 'normal';
+                }
+            }
+            
+            calculateSectionTotal(fields) {
+                return fields.reduce((total, fieldName) => {
+                    return total + this.getFieldScore(fieldName);
+                }, 0);
+            }
+            
+            checkZeroTolerance() {
+                let hasZeroToleranceViolation = false;
+                
+                this.zeroToleranceFields.forEach(fieldName => {
+                    const selectedRadio = document.querySelector(`input[name="${fieldName}"]:checked`);
+                    
+                    // Zero tolerance violation if "No" is selected
+                    if (selectedRadio && selectedRadio.value === 'no') {
+                        hasZeroToleranceViolation = true;
+                    }
+                });
+                
+                const warningElement = document.getElementById('zeroToleranceWarning');
+                if (hasZeroToleranceViolation) {
+                    warningElement.style.display = 'block';
+                } else {
+                    warningElement.style.display = 'none';
+                }
+                
+                return hasZeroToleranceViolation;
+            }
+            
+            validateForm() {
+                const requiredFields = [
+                    'auditPurpose',
+                    'auditorName',
+                    'auditorEmail',
+                    'specialistName',
+                    'specialistEmail',
+                    'managerEmail', 
+                    'teamLeadEmail',
+                    'interactionType',
+                    'interactionContent'
+                ];
+                
+                const missingFields = [];
+                
+                requiredFields.forEach(fieldName => {
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    if (!field || !field.value.trim()) {
+                        missingFields.push(fieldName);
+                    }
+                });
+                
+                if (missingFields.length > 0) {
+                    alert(`Please fill in the following required fields:\n${missingFields.join(', ')}`);
+                    return false;
+                }
+                
+                // Validate email formats
+                const emailFields = ['auditorEmail', 'specialistEmail', 'managerEmail', 'teamLeadEmail'];
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                for (const fieldName of emailFields) {
+                    const field = document.querySelector(`[name="${fieldName}"]`);
+                    if (field && !emailRegex.test(field.value)) {
+                        alert(`Please enter a valid email address for ${fieldName}`);
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+            
+            collectAuditData() {
+                const formData = new FormData(document.getElementById('auditForm'));
+                const auditData = {};
+                
+                // Collect all form data
+                for (let [key, value] of formData.entries()) {
+                    auditData[key] = value;
+                }
+                
+                // Calculate scores
+                const customerFields = [
+                    'understanding', 'confirmation', 'tone', 'nextSteps', 'keyPoints',
+                    'bodyLanguage', 'noJargon', 'resources', 'partnerUnderstanding',
+                    'deadAir', 'callLength', 'politeTone', 'emailQuality', 'expectations'
+                ];
+                
+                const businessFields = [
+                    'workflow', 'taskManager', 'communicationMode', 'bounceBack',
+                    'revenueLoss', 'slaTimeframe', 'callRecording'
+                ];
+                
+                const complianceFields = [
+                    'commentVisibility', 'whiteLabelling', 'documentUpload',
+                    'ticketClosure', 'partnerConsent'
+                ];
+                
+                auditData.scores = {
+                    customer: {
+                        total: this.calculateSectionTotal(customerFields),
+                        maxTotal: 53,
+                        fields: {}
+                    },
+                    business: {
+                        total: this.calculateSectionTotal(businessFields),
+                        maxTotal: 28,
+                        fields: {}
+                    },
+                    compliance: {
+                        total: this.calculateSectionTotal(complianceFields),
+                        maxTotal: 19,
+                        fields: {}
+                    }
+                };
+                
+                // Add individual field scores
+                [...customerFields, ...businessFields, ...complianceFields].forEach(field => {
+                    const selectedRadio = document.querySelector(`input[name="${field}"]:checked`);
+                    const score = this.getFieldScore(field);
+                    const maxScore = this.maxScores[field];
+                    const selection = selectedRadio ? selectedRadio.value : 'yes';
+                    
+                    const fieldData = { score, maxScore, selection };
+                    
+                    if (customerFields.includes(field)) {
+                        auditData.scores.customer.fields[field] = fieldData;
+                    } else if (businessFields.includes(field)) {
+                        auditData.scores.business.fields[field] = fieldData;
+                    } else if (complianceFields.includes(field)) {
+                        auditData.scores.compliance.fields[field] = fieldData;
+                    }
+                });
+                
+                auditData.hasZeroToleranceViolation = this.checkZeroTolerance();
+                
+                // Apply zero tolerance override
+                if (auditData.hasZeroToleranceViolation) {
+                    auditData.totalScore = 0;
+                    auditData.scores.customer.total = 0;
+                    auditData.scores.business.total = 0;
+                    auditData.scores.compliance.total = 0;
+                } else {
+                    auditData.totalScore = auditData.scores.customer.total + 
+                                          auditData.scores.business.total + 
+                                          auditData.scores.compliance.total;
+                }
+                
+                auditData.percentage = Math.round((auditData.totalScore / 100) * 100);
+                auditData.auditDate = new Date().toISOString();
+                
+                // Generate Audit ID based on interaction type
+                if (auditData.interactionType === 'email' || auditData.interactionType === 'chat') {
+                    auditData.auditId = auditData.ticketNumber || `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                } else if (auditData.interactionType === 'call') {
+                    auditData.auditId = auditData.recordingLink || `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                } else {
+                    auditData.auditId = `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                }
+                
+                return auditData;
+            }
+            
+            generateEmailContent(auditData) {
+                // Generate personalized subject line
+                const emailSubject = `QA Audit Results - ${auditData.specialistName} - ${auditData.percentage}% Score`;
+                
+                // Generate interaction reference
+                let interactionReference = '';
+                if (auditData.interactionType === 'email' || auditData.interactionType === 'chat') {
+                    interactionReference = auditData.ticketNumber ? 
+                        `Your ticket ${auditData.ticketNumber}` : 
+                        `Your ${auditData.interactionType} interaction`;
+                } else if (auditData.interactionType === 'call') {
+                    interactionReference = `Your onboarding call`;
+                    if (auditData.recordingLink && auditData.ticketNumber) {
+                        interactionReference += ` (${auditData.ticketNumber})`;
+                    }
+                } else {
+                    interactionReference = `Your interaction`;
+                }
+                
+                // Generate score status
+                const scoreStatus = auditData.hasZeroToleranceViolation ? 
+                    'FAILED due to zero tolerance violation' : 
+                    auditData.percentage >= 90 ? 'EXCELLENT' :
+                    auditData.percentage >= 80 ? 'GOOD' :
+                    auditData.percentage >= 70 ? 'NEEDS IMPROVEMENT' : 'REQUIRES IMMEDIATE ATTENTION';
+                
+                let emailBody = `
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: 0 auto; background-color: #ffffff; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+        .content { padding: 30px; }
+        .greeting { font-size: 18px; margin-bottom: 20px; }
+        .score-banner { 
+            background: ${auditData.hasZeroToleranceViolation ? '#ffebee' : auditData.percentage >= 90 ? '#e8f5e8' : auditData.percentage >= 80 ? '#fff3e0' : '#ffebee'}; 
+            border-left: 5px solid ${auditData.hasZeroToleranceViolation ? '#f44336' : auditData.percentage >= 90 ? '#4caf50' : auditData.percentage >= 80 ? '#ff9800' : '#f44336'};
+            padding: 20px; 
+            margin: 20px 0; 
+            border-radius: 5px;
+        }
+        .score-number { font-size: 36px; font-weight: bold; color: ${auditData.hasZeroToleranceViolation ? '#f44336' : auditData.percentage >= 90 ? '#4caf50' : auditData.percentage >= 80 ? '#ff9800' : '#f44336'}; }
+        .section { margin: 25px 0; padding: 20px; border-radius: 8px; }
+        .strengths { background-color: #e8f5e8; border-left: 4px solid #4caf50; }
+        .missed { background-color: #ffebee; border-left: 4px solid #f44336; }
+        .opportunities { background-color: #fff3e0; border-left: 4px solid #ff9800; }
+        .tips { background-color: #e3f2fd; border-left: 4px solid #2196f3; }
+        .section h3 { margin-top: 0; color: #333; }
+        .interaction-details { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .warning-banner { background-color: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #666; border-top: 1px solid #dee2e6; }
+        .link { color: #2196f3; text-decoration: none; }
+        .link:hover { text-decoration: underline; }
+        .cta-section { background-color: #f8f9fa; padding: 30px; margin: 30px 0; border-radius: 8px; text-align: center; border: 2px solid #e9ecef; }
+        .cta-buttons { margin: 20px 0; }
+        .cta-button { display: inline-block; padding: 15px 30px; margin: 0 10px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px; transition: all 0.3s ease; }
+        .accept-btn { background-color: #28a745; color: white; }
+        .accept-btn:hover { background-color: #218838; color: white; text-decoration: none; }
+        .dispute-btn { background-color: #dc3545; color: white; }
+        .dispute-btn:hover { background-color: #c82333; color: white; text-decoration: none; }
+        ul { padding-left: 20px; }
+        li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QA Audit Results</h1>
+            <p>Quality Assurance Evaluation Report</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                <strong>Hi ${auditData.specialistName},</strong>
+            </div>
+            
+            <p>${interactionReference} has been reviewed and scored. Here are your detailed results:</p>
+            
+            <div class="score-banner">
+                <div class="score-number">${auditData.totalScore}/100 (${auditData.percentage}%)</div>
+                <div style="font-size: 18px; font-weight: bold; margin-top: 10px;">Status: ${scoreStatus}</div>
+                <div style="margin-top: 10px;">
+                    ${auditData.interactionType === 'call' && auditData.recordingLink ? 
+                        `<strong>Recording:</strong> <a href="${auditData.recordingLink}" class="link" target="_blank">View Meeting Recording</a>` : 
+                        auditData.ticketNumber ? `<strong>Reference:</strong> ${auditData.ticketNumber}` : ''
+                    }
+                </div>
+            </div>
+            
+            ${auditData.hasZeroToleranceViolation ? `
+            <div class="warning-banner">
+                <h3 style="color: #d32f2f; margin: 0;">⚠️ ZERO TOLERANCE VIOLATION</h3>
+                <p style="margin: 10px 0 0 0;"><strong>This audit resulted in an automatic failure due to one or more critical violations that cannot be overlooked.</strong></p>
+            </div>
+            ` : ''}
+            
+            <div class="section strengths">
+                <h3>✅ Strengths & Positives</h3>
+                <p>${auditData.positives || 'No specific strengths noted in this audit.'}</p>
+            </div>
+            
+            <div class="section opportunities">
+                <h3>🎯 Areas for Improvement</h3>
+                <p>${auditData.opportunities || 'No specific improvement areas identified in this audit.'}</p>
+            </div>
+            
+            <div class="section tips">
+                <h3>💡 Coaching Tips & Recommendations</h3>
+                <p>${auditData.tips || 'No specific coaching recommendations provided in this audit.'}</p>
+            </div>
+            
+            <div class="interaction-details">
+                <h3>Interaction Details</h3>
+                <p><strong>Type:</strong> ${this.getInteractionTypeDisplay(auditData.interactionType)}</p>
+                <p><strong>Date:</strong> ${new Date(auditData.auditDate).toLocaleDateString()}</p>
+                ${auditData.ticketNumber ? `<p><strong>Ticket:</strong> ${auditData.ticketNumber}</p>` : ''}
+                ${auditData.recordingLink ? `<p><strong>Recording:</strong> <a href="${auditData.recordingLink}" class="link" target="_blank">${auditData.recordingLink}</a></p>` : ''}
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h3>Score Breakdown</h3>
+                <ul>
+                    <li><strong>Customer Crucial:</strong> ${auditData.scores.customer.total}/${auditData.scores.customer.maxTotal} (${Math.round((auditData.scores.customer.total / auditData.scores.customer.maxTotal) * 100)}%)</li>
+                    <li><strong>Business Crucial:</strong> ${auditData.scores.business.total}/${auditData.scores.business.maxTotal} (${Math.round((auditData.scores.business.total / auditData.scores.business.maxTotal) * 100)}%)</li>
+                    <li><strong>Compliance Crucial:</strong> ${auditData.scores.compliance.total}/${auditData.scores.compliance.maxTotal} (${Math.round((auditData.scores.compliance.total / auditData.scores.compliance.maxTotal) * 100)}%)</li>
+                </ul>
+            </div>
+            
+            <div class="cta-section">
+                <h3>📝 Your Response Required</h3>
+                <p>Please review this audit and let us know your response:</p>
+                <div class="cta-buttons">
+                    <a href="https://vendastaqacoaching.github.io/QACoaching/audit-response.html?id=${auditData.auditId}&action=accept&specialist=${encodeURIComponent(auditData.specialistName)}&auditor=${encodeURIComponent(auditData.auditorEmail)}" class="cta-button accept-btn">✅ Accept Audit</a>
+                    <a href="https://vendastaqacoaching.github.io/QACoaching/audit-response.html?id=${auditData.auditId}&action=dispute&specialist=${encodeURIComponent(auditData.specialistName)}&auditor=${encodeURIComponent(auditData.auditorEmail)}" class="cta-button dispute-btn">⚠️ Dispute Audit</a>
+                </div>
+                <p><small><strong>Audit ID:</strong> ${auditData.auditId}</small></p>
+                <p><small>If you accept, we'll record your acknowledgment. If you dispute, you'll be able to provide comments explaining your concerns.</small></p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This audit was conducted to help improve service quality and ensure consistent excellence.</p>
+            <p><em>For questions about this audit, please contact your manager or team lead.</em></p>
+        </div>
+    </div>
+</body>
+</html>
+                `;
+                
+                return { subject: emailSubject, body: emailBody };
+            }
+            
+            getInteractionTypeDisplay(interactionType) {
+                const typeDisplays = {
+                    email: "📧 Email Conversation",
+                    call: "📞 Onboarding Call",
+                    chat: "💬 Chat Support",
+                    other: "📋 Other"
+                };
+                
+                return typeDisplays[interactionType] || interactionType;
+            }
+            
+            async finishAudit() {
+                // Validate form
+                if (!this.validateForm()) {
+                    return;
+                }
+                
+                // Collect audit data
+                const auditData = this.collectAuditData();
+                
+                // Generate email content
+                const emailContent = this.generateEmailContent(auditData);
+                
+                // Show confirmation dialog
+                const confirmMessage = `
+Are you sure you want to finish this audit and send results?
 
-                // Show success message
-                document.getElementById('responseForm').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
+Final Score: ${auditData.totalScore}/100 (${auditData.percentage}%)
+${auditData.hasZeroToleranceViolation ? '\n⚠️ WARNING: Zero tolerance violation detected!' : ''}
 
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('errorText').textContent = 'Error submitting response. Please try again.';
-                document.getElementById('errorMessage').style.display = 'block';
-            } finally {
-                // Re-enable buttons
-                document.getElementById('submitAccept').disabled = false;
-                document.getElementById('submitDispute').disabled = false;
-                document.getElementById('submitAccept').textContent = '✅ Accept Audit';
-                document.getElementById('submitDispute').textContent = '⚠️ Submit Dispute';
+Recipients:
+- Specialist: ${auditData.specialistEmail}
+- Manager: ${auditData.managerEmail}
+- Team Lead: ${auditData.teamLeadEmail}
+                `;
+                
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+                
+                // Disable the button and show loading state
+                const finishButton = document.getElementById('finishAudit');
+                finishButton.disabled = true;
+                finishButton.textContent = 'Sending Results...';
+                
+                try {
+                    // Send to Google Apps Script
+                    const response = await fetch('https://script.google.com/macros/s/AKfycbzAmuaHHFdu_nrcVWyJWwYxCxS6qMluuAlTVpYtvS1T00RRt5r2OmT2VhaJRRrH9_Jc/exec', {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            auditData: auditData,
+                            emailContent: emailContent,
+                            action: 'submit_audit'
+                        })
+                    });
+
+                    alert('Audit submitted successfully! Results have been sent to all recipients.');
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error submitting audit. Please try again.');
+                } finally {
+                    // Re-enable button
+                    finishButton.disabled = false;
+                    finishButton.textContent = 'Finish Audit & Send Results';
+                }
+            }
+            
+            async downloadReport() {
+                // Validate form
+                if (!this.validateForm()) {
+                    return;
+                }
+                
+                // Collect audit data
+                const auditData = this.collectAuditData();
+                
+                // Disable the button and show loading state
+                const downloadButton = document.getElementById('downloadReport');
+                downloadButton.disabled = true;
+                downloadButton.textContent = 'Downloading...';
+                
+                try {
+                    // Send to Google Apps Script for sheet recording
+                    const response = await fetch('https://script.google.com/macros/s/AKfycbzAmuaHHFdu_nrcVWyJWwYxCxS6qMluuAlTVpYtvS1T00RRt5r2OmT2VhaJRRrH9_Jc/exec', {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            auditData: auditData,
+                            action: 'download_report'
+                        })
+                    });
+
+                    alert('Report downloaded and data recorded in Google Sheets successfully!');
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error downloading report. Please try again.');
+                } finally {
+                    // Re-enable button
+                    downloadButton.disabled = false;
+                    downloadButton.textContent = 'Download Report';
+                }
             }
         }
+
+        // Global variable to hold QA tool instance
+        let qaToolInstance = null;
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if already authenticated
+            if (sessionStorage.getItem('qaToolAuthenticated') === 'true') {
+                // Initialize immediately if already authenticated
+                qaToolInstance = new QAMonitoringTool();
+            }
+        });
+
+        // Function to initialize QA tool after password is entered
+        function initializeQATool() {
+            console.log('🚀 initializeQATool() called');
+            if (!qaToolInstance) {
+                console.log('✅ Creating new QAMonitoringTool instance...');
+                qaToolInstance = new QAMonitoringTool();
+                console.log('✅ QAMonitoringTool initialized successfully!');
+            } else {
+                console.log('⚠️ QAMonitoringTool already initialized');
+            }
+        }
+    </script>
+
+    </div> <!-- END mainContent -->
+
+    <!-- PASSWORD CHECKING SCRIPT -->
+    <script>
+        const CORRECT_PASSWORD = "QAcoaching@Vendasta";
+        
+        function checkPassword() {
+            const inputPassword = document.getElementById('passwordInput').value;
+            const errorDiv = document.getElementById('passwordError');
+            
+            if (inputPassword === CORRECT_PASSWORD) {
+                // Password is correct - hide password screen and show main content
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                
+                // Store in sessionStorage so user doesn't have to re-enter during session
+                sessionStorage.setItem('qaToolAuthenticated', 'true');
+                
+                // Initialize the QA tool now that content is visible
+                initializeQATool();
+            } else {
+                // Password is incorrect - show error
+                errorDiv.classList.add('show');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+                
+                // Hide error after 3 seconds
+                setTimeout(() => {
+                    errorDiv.classList.remove('show');
+                }, 3000);
+            }
+        }
+        
+        // Allow Enter key to submit password
+        document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        });
+        
+        // Check if user is already authenticated in this session
+        window.addEventListener('DOMContentLoaded', function() {
+            if (sessionStorage.getItem('qaToolAuthenticated') === 'true') {
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            } else {
+                // Auto-focus on password input
+                document.getElementById('passwordInput').focus();
+            }
+        });
     </script>
 </body>
 </html>
